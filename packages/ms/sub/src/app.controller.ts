@@ -8,14 +8,16 @@ import {
 } from '@nestjs/microservices';
 import { RedisService } from './redis.service';
 import { Status } from './redis';
+import { EventGateway } from './event.gateway';
 
 @Controller()
 export class AppController {
   constructor(
     private readonly appService: AppService,
     private redisService: RedisService,
+    private eventGateway: EventGateway,
   ) {
-    console.log(new Date().toISOString() + '\tAppController constructor');
+    console.log(new Date().toISOString() + ' | AppController constructor');
   }
 
   @Get()
@@ -29,14 +31,16 @@ export class AppController {
     const channel = ctx.getChannel();
     console.log(
       new Date().toISOString() +
-        '\tAppController | saveData | ' +
+        ' | AppController | saveData | ' +
         channel +
         ' | ' +
         payload.status,
     );
+
     const data = this.redisService.redis.set(channel, JSON.stringify(payload));
 
-    // this.appService.push(value);
+    this.eventGateway.emitEvent(channel, payload);
+
     return data;
   }
 }
