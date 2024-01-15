@@ -1,0 +1,40 @@
+version: '3.5'
+services:
+  pub:
+    container_name: pub
+    build:
+      context: .
+      args:
+        - APP=pub
+      target: dev
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app/pub
+    tty: true
+    ports:
+      - '3000:3000'
+    depends_on:
+      - redis
+
+  sub:
+    container_name: sub
+    build:
+      context: .
+      args:
+        - APP=sub
+      target: dev
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app/sub
+    tty: true
+    ports:
+      - '3001:3001'
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:alpine
+    ports:
+      - '6379:6379'
