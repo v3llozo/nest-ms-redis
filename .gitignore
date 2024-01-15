@@ -35,5 +35,6 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
-packages/ms/**/dist
-packages/ionic-app/.angular/**
+packages/ms/dist/**
+packages/ms/**/dist/
+packages/ionic-app/.angular/
